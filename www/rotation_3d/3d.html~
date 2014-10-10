@@ -1,0 +1,70 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <title> - jsFiddle demo</title>
+  <style type='text/css'>
+    html { height: 100%; width: 100% }
+    body { height: 100%; width: 100% }
+    #flat { 
+    height: 10%; 
+    width: 10%;
+    position: absolute; 
+    top: 45%;
+    left: 45%;
+    background: purple;
+    }
+  </style>
+  
+
+
+<script type='text/javascript'>
+var VanillaRunOnDomReady = function() {
+var flat = document.getElementById("flat"),
+    flatStyle = flat.style,
+    _transform = "WebkitTransform" in flatStyle ? "WebkitTransform" :
+        "MozTransform" in flatStyle ? "MozTransform" :
+            "msTransform" in flatStyle ? "msTransform" : false;
+
+_transform && window.addEventListener("deviceorientation", function(e) {
+    flatStyle[_transform] = "perspective(500px) rotateY("+(-e.gamma)+"deg) rotateX("+e.beta+"deg) rotateZ("+-(e.alpha-180)+"deg)";
+});
+
+}
+
+var alreadyrunflag = 0;
+
+if (document.addEventListener)
+    document.addEventListener("DOMContentLoaded", function(){
+        alreadyrunflag=1; 
+        VanillaRunOnDomReady();
+    }, false);
+else if (document.all && !window.opera) {
+    document.write('<script type="text/javascript" id="contentloadtag" defer="defer" src="javascript:void(0)"><\/script>');
+    var contentloadtag = document.getElementById("contentloadtag")
+    contentloadtag.onreadystatechange=function(){
+        if (this.readyState=="complete"){
+            alreadyrunflag=1;
+            VanillaRunOnDomReady();
+        }
+    }
+}
+
+window.onload = function(){
+  setTimeout("if (!alreadyrunflag){VanillaRunOnDomReady}", 0);
+}
+
+</script>
+
+
+</head>
+<body>
+  <div id="flat"></div>
+  
+</body>
+
+
+</html>
+
+

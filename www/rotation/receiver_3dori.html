@@ -1,0 +1,72 @@
+<!document html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, maximum-scale=1.0">
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+        <title>Orentation - Receiver</title>
+        <style>
+            #container {
+                width: 400px;
+                height: 400px;
+                margin-top: 50px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            #img {
+                position: relative;
+                left: 72px;
+                top: 72px;
+                width: 256px;
+                height: 256px;
+            }
+        </style>
+	<script>
+            var ws = new WebSocket( 'ws://' + window.location.host );
+
+            var c;
+	    var ctx
+            var load = function (){
+		c=document.getElementById("myCanvas");
+                //el = document.getElementById('img');
+		ctx=c.getContext("2d");	
+            };
+	    
+	    
+            ws.onmessage = function( obj ){
+
+                if ( typeof obj.data !== 'object' ) {
+                    var dataObj = JSON.parse( obj.data );
+                    if (dataObj.demo.type === "orientation") {
+                     ctx.clearRect(0,0, c.width, c.height);
+		     ctx.fillStyle="#FF7777";
+		     ctx.font="14px Verdana";
+		     ctx.fillText("Alpha:" + Math.round(dataObj.demo.alpha) ,10,20);
+		     ctx.beginPath();
+		     ctx.moveTo(180, 75);
+		     ctx.lineTo(210, 75);
+		     ctx.arc(180,75,60,0, dataObj.demo.alpha*Math.PI/180);
+		     ctx.fill();
+
+		     ctx.fillStyle="#FF6600";
+		     ctx.fillText("Beta:" + Math.round(dataObj.demo.beta),10,140);
+		     ctx.beginPath();
+		     ctx.fillRect(180, 150, dataObj.demo.beta, 90);
+
+		     ctx.fillStyle="#FF0000";
+		     ctx.fillText("Gamma:" + Math.round(dataObj.demo.gamma),10,270);
+		     ctx.beginPath();
+		     ctx.fillRect(90, 340, 180, dataObj.demo.gamma);
+
+			}
+                }
+
+            };
+
+            window.addEventListener('DOMContentLoaded', load, false);
+        </script>
+    </head>
+    <body><canvas id="myCanvas" width="360" height="450" style="border:1px solid #d3d3d3;"></canvas>
+    </body>
+</html>

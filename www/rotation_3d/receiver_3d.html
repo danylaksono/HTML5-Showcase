@@ -1,0 +1,55 @@
+<!document html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, maximum-scale=1.0">
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+        <title>Orentation - Receiver</title>
+        <style>
+		html { height: 100%; width: 100% }
+		body { height: 100%; width: 100% }
+		#flat { 
+		    height: 10%; 
+		    width: 10%;
+		    position: absolute; 
+		    top: 45%;
+		    left: 45%;
+		    background: purple;
+		}
+
+        </style>
+	<script>
+            var ws = new WebSocket( 'ws://' + window.location.host );
+
+            var c;
+	    var ctx
+            var load = function (){
+		   var flat = document.getElementById("flat"),
+  		  flatStyle = flat.style,
+  		  _transform = "WebkitTransform" in flatStyle ? "WebkitTransform" :
+     		   "MozTransform" in flatStyle ? "MozTransform" :
+     		       "msTransform" in flatStyle ? "msTransform" : false;
+            };
+	    
+	    
+            ws.onmessage = function( obj ){
+
+                if ( typeof obj.data !== 'object' ) {
+                    var dataObj = JSON.parse( obj.data );
+                    if (dataObj.demo.type === "orientation") {
+                  
+_transform && window.addEventListener("deviceorientation", function(e) {
+    flatStyle[_transform] = "perspective(500px) rotateY("+(-e.gamma)+"deg) rotateX("+e.beta+"deg) rotateZ("+-(e.alpha-180)+"deg)";
+});
+
+			}
+                }
+
+            };
+
+            window.addEventListener('DOMContentLoaded', load, false);
+        </script>
+    </head>
+    <body><canvas id="myCanvas" width="360" height="450" style="border:1px solid #d3d3d3;"></canvas>
+    </body>
+</html>
